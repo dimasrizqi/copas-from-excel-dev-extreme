@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data SFG</title>
+  </head>
+  
+  <body>
+    
+  </body>
+  
+  <div class="dx-viewport demo-container">
+    <div id="gridContainer"></div>
+  </div>
+  <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/24.1.5/css/dx.material.blue.light.css" /> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn3.devexpress.com/jslib/20.1.7/js/dx.all.js"></script>
+<script>
+  $(function () {
+
+    bindGrid();
+    const editor = document.getElementById('gridContainer');
+
+    editor.onpaste = logPaste;
+  });
+
+  function bindGrid() {
+    $("#gridContainer").dxDataGrid({
+      dataSource: customers,
+      editing: {
+            allowUpdating: true, 
+            allowAdding: true, 
+            allowDeleting: true,
+            mode: 'row' 
+        },
+      columnMinWidth: 100,
+      columnAutoWidth: true,
+      columns: ["Comp", "Component Description", "Aty", "Uom"],
+      showRowLines: true,
+      showBorders: true
+    });
+  }
+
+  function logPaste(event) {
+    console.log(event);
+    var clipboardData, pastedData;
+
+    event.stopPropagation();
+    event.preventDefault();
+
+    clipboardData = event.clipboardData || window.clipboardData;
+    pastedData = clipboardData.getData('Text');
+
+    var data = pastedData;
+
+    var rows = data.split("\n");
+    console.log("rows :" + rows);
+    for (var y in rows) {
+      var cells = rows[y].split("\t");
+      if (cells !== "" || cells !== null) {
+        console.log("cells :" + cells);
+        console.log("customers :" + customers);
+        customers.push({ "Comp": cells[0], "Component Description": cells[1], "Aty": cells[2], "Uom": cells[3] });
+      }
+    }
+    bindGrid();
+  }
+
+  var customers = [{
+    "Comp": 1,
+    "Component Description": "MUNCH Chocolate Cream Bulk",
+    "Aty": "",
+    "Uom": "1.480"
+  }, {
+    "Comp": 1,
+    "Component Description": "FOX'S MintBlossomUnrpOval NatClr 2.5g ID",
+    "Aty": "",
+    "Uom": "3.280"
+  }];
+</script>
+
+</html>
